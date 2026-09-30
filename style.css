@@ -423,3 +423,26 @@ input[type="password"] {
   color: var(--text-dim);
   white-space: nowrap;
 }
+
+.divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: var(--text-dim); font-size: 12px; }
+.divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.google-btn {
+  font: inherit; font-weight: 600; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #fff; color: #3c4043; border: 1px solid #dadce0; border-radius: 10px;
+  padding: 11px 16px; cursor: pointer;
+}
+.google-btn:active { opacity: 0.85; }
+.log-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.delete-btn {
+  font: inherit; font-size: 12px; background: none; border: 1px solid var(--border);
+  color: var(--text-dim); border-radius: 999px; padding: 3px 10px; cursor: pointer; white-space: nowrap;
+}
+.delete-btn:hover { color: var(--danger); border-color: var(--danger); }
+.cat-list { display: flex; flex-direction: column; gap: 8px; }
+.cat-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px;
+}
+.cat-row-info { font-size: 14px; min-width: 0; }
+.cat-row-count { font-size: 12px; color: var(--text-dim); margin-left: 6px; }

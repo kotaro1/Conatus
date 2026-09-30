@@ -119,6 +119,16 @@ function bindAuthEvents() {
     }
   });
 
+  document.getElementById("google-btn").addEventListener("click", async () => {
+    const feedback = document.getElementById("auth-feedback");
+    feedback.textContent = "";
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + location.pathname },
+    });
+    if (error) feedback.textContent = "Googleでのログインを開始できませんでした";
+  });
+
   document.getElementById("signout-btn").addEventListener("click", async () => {
     await client.auth.signOut();
   });
@@ -178,6 +188,7 @@ function renderAll() {
   renderTimeline();
   renderGoals();
   renderAchievedGoals();
+  renderCategoryManager();
 }
 
 // ---------- 統計 ----------
@@ -286,13 +297,67 @@ function renderTimeline() {
     .map(
       (log) => `
       <article class="log-card">
-        <div class="log-date">${formatDate(log.logged_at)}</div>
+        <div class="log-card-head">
+          <div class="log-date">${formatDate(log.logged_at)}</div>
+          <button type="button" class="delete-btn" data-delete-log="${log.id}">削除</button>
+        </div>
         <p class="log-content">${escapeHtml(log.content)}</p>
         <div class="log-tags">${categoryTag(log.categories)}</div>
       </article>
     `
     )
     .join("");
+
+  el.querySelectorAll("[data-delete-log]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteLog(btn.dataset.deleteLog));
+  });
+}
+
+async function deleteLog(id) {
+  if (!confirm("この記録を削除しますか？（元に戻せません）")) return;
+  const { error } = await client.from("logs").delete().eq("id", id);
+  if (error) return showError("log削除", error);
+  await loadLogs();
+  renderStats();
+  renderTagFilter();
+  renderTimeline();
+  renderCategoryManager();
+}
+
+// ---------- カテゴリ管理 ----------
+
+function renderCategoryManager() {
+  const el = document.getElementById("category-manager");
+  if (state.categories.length === 0) {
+    el.innerHTML = `<p class="empty">カテゴリはまだありません</p>`;
+    return;
+  }
+  el.innerHTML = state.categories
+    .map((c) => {
+      const count = state.logs.filter((l) => l.category_id === c.id).length;
+      return `
+      <div class="cat-row">
+        <div class="cat-row-info">${categoryTag(c)}<span class="cat-row-count">記録 ${count}件</span></div>
+        <button type="button" class="delete-btn" data-delete-category="${c.id}">削除</button>
+      </div>`;
+    })
+    .join("");
+  el.querySelectorAll("[data-delete-category]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteCategory(btn.dataset.deleteCategory));
+  });
+}
+
+async function deleteCategory(id) {
+  const cat = state.categories.find((c) => c.id === id);
+  if (!cat) return;
+  const count = state.logs.filter((l) => l.category_id === id).length;
+  const msg = `カテゴリ「${cat.name}」を削除しますか？\nこのカテゴリの記録 ${count}件 も一緒に削除されます（元に戻せません）。\n※このカテゴリの目標は残り、カテゴリなしになります。`;
+  if (!confirm(msg)) return;
+  const { error } = await client.from("categories").delete().eq("id", id);
+  if (error) return showError("category削除", error);
+  if (state.activeCategoryId === id) state.activeCategoryId = null;
+  await Promise.all([loadCategories(), loadLogs(), loadGoals()]);
+  renderAll();
 }
 
 // ---------- 目標 ----------
@@ -394,6 +459,7 @@ function bindAppEvents() {
     }
     state.categories.push(data);
     renderCategorySelects();
+    renderCategoryManager();
     document.getElementById("log-category").value = data.id;
     input.value = "";
     document.getElementById("new-category-public").checked = false;
@@ -425,6 +491,7 @@ function bindAppEvents() {
     renderStats();
     renderTagFilter();
     renderTimeline();
+    renderCategoryManager();
   });
 
   document.getElementById("new-goal-btn").addEventListener("click", () => {
