@@ -13,32 +13,82 @@
         <h1>Conatus</h1>
         <p class="subtitle">学んだこと、できるようになったことの記録</p>
       </div>
+      <div id="user-bar" class="user-bar hidden">
+        <span id="user-name" class="user-name"></span>
+        <button type="button" id="signout-btn" class="ghost-btn">ログアウト</button>
+      </div>
     </header>
 
-    <section class="stats" id="stats">
-      <!-- 統計カードはJSで挿入 -->
+    <section id="auth-panel" class="panel quick-panel hidden">
+      <h2 class="panel-title" id="auth-title">ログイン</h2>
+      <form id="auth-form" class="quick-form">
+        <input type="text" id="auth-display-name" class="hidden" placeholder="表示名（他の人に見える名前）" maxlength="30" autocomplete="nickname" />
+        <input type="email" id="auth-email" placeholder="メールアドレス" required autocomplete="email" />
+        <input type="password" id="auth-password" placeholder="パスワード（8文字以上）" required minlength="8" autocomplete="current-password" />
+        <button type="submit" id="auth-submit" class="primary-btn">ログイン</button>
+        <button type="button" id="auth-toggle" class="ghost-btn">はじめての方はアカウントを作る</button>
+      </form>
+      <p id="auth-feedback" class="feedback"></p>
     </section>
 
-    <section class="panel">
-      <h2 class="panel-title">習得したスキル</h2>
-      <div class="skills" id="skills">
-        <!-- スキルバッジはJSで挿入 -->
-      </div>
-    </section>
+    <div id="app-root" class="hidden">
+      <section class="stats" id="stats"></section>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2 class="panel-title">学習ログ</h2>
-        <div class="tag-filter" id="tag-filter">
-          <!-- タグボタンはJSで挿入 -->
+      <section class="panel quick-panel">
+        <h2 class="panel-title">クイック入力</h2>
+        <form id="log-form" class="quick-form">
+          <div class="field-row">
+            <select id="log-category" required>
+              <option value="" disabled selected>カテゴリを選ぶ</option>
+            </select>
+            <button type="button" id="new-category-btn" class="ghost-btn">＋ 新しいカテゴリ</button>
+          </div>
+          <div id="new-category-row" class="field-row hidden">
+            <input type="text" id="new-category-name" placeholder="新しいカテゴリ名（例: 筋トレ）" maxlength="30" />
+            <label class="check-label"><input type="checkbox" id="new-category-public" /> 公開する</label>
+            <button type="button" id="save-category-btn" class="ghost-btn">追加</button>
+          </div>
+          <textarea id="log-content" rows="2" maxlength="500" placeholder="今日の気づき・やったことを一言二言で" required></textarea>
+          <button type="submit" class="primary-btn">記録する</button>
+        </form>
+        <p id="log-feedback" class="feedback"></p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">目標</h2>
+          <button type="button" id="new-goal-btn" class="ghost-btn">＋ 新しい目標</button>
         </div>
-      </div>
-      <div class="timeline" id="timeline">
-        <!-- ログはJSで挿入 -->
-      </div>
-    </section>
+        <form id="goal-form" class="quick-form hidden">
+          <input type="text" id="goal-title" maxlength="200" placeholder="目標（例: GitHub Actionsを使えるようになる）" required />
+          <div class="field-row">
+            <input type="date" id="goal-date" required />
+            <select id="goal-category">
+              <option value="">カテゴリなし</option>
+            </select>
+          </div>
+          <button type="submit" class="primary-btn">目標を設定する</button>
+        </form>
+        <div class="goals" id="goals"></div>
+      </section>
+
+      <section class="panel">
+        <h2 class="panel-title">達成した目標</h2>
+        <div class="skills" id="achieved-goals"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">学習ログ</h2>
+          <div class="tag-filter" id="tag-filter"></div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </section>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
