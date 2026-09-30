@@ -88,6 +88,8 @@ function bindAuthEvents() {
       ? "すでにアカウントをお持ちの方はログイン"
       : "はじめての方はアカウントを作る";
     document.getElementById("auth-display-name").classList.toggle("hidden", !state.signupMode);
+    document.getElementById("auth-password2").classList.toggle("hidden", !state.signupMode);
+    document.getElementById("auth-password2").value = "";
     document.getElementById("auth-password").autocomplete = state.signupMode ? "new-password" : "current-password";
     document.getElementById("auth-feedback").textContent = "";
   });
@@ -101,6 +103,10 @@ function bindAuthEvents() {
     feedback.textContent = "";
 
     if (state.signupMode) {
+      const password2 = document.getElementById("auth-password2").value;
+      if (password !== password2) {
+        return (feedback.textContent = "パスワードが一致しません。もう一度確認してください");
+      }
       const { data, error } = await client.auth.signUp({
         email,
         password,
@@ -376,6 +382,25 @@ function renderGoals() {
   el.querySelectorAll(".goal-status-btn").forEach((btn) => {
     btn.addEventListener("click", () => cycleGoalStatus(btn.dataset.id, btn.dataset.status));
   });
+  bindGoalDeleteButtons(el);
+}
+
+function bindGoalDeleteButtons(root) {
+  root.querySelectorAll("[data-delete-goal]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteGoal(btn.dataset.deleteGoal));
+  });
+}
+
+async function deleteGoal(id) {
+  const goal = state.goals.find((g) => g.id === id);
+  if (!goal) return;
+  if (!confirm(`目標「${goal.title}」を削除しますか？（元に戻せません）`)) return;
+  const { error } = await client.from("goals").delete().eq("id", id);
+  if (error) return showError("goal削除", error);
+  await loadGoals();
+  renderGoals();
+  renderAchievedGoals();
+  renderStats();
 }
 
 function goalCard(g) {
@@ -393,7 +418,10 @@ function goalCard(g) {
           ${categoryTag(g.categories)}
         </div>
       </div>
-      <button class="goal-status-btn" data-id="${g.id}" data-status="${g.status}">${statusLabel}</button>
+      <div class="goal-actions">
+        <button class="goal-status-btn" data-id="${g.id}" data-status="${g.status}">${statusLabel}</button>
+        <button type="button" class="delete-btn" data-delete-goal="${g.id}">削除</button>
+      </div>
     </div>
   `;
 }
@@ -428,10 +456,12 @@ function renderAchievedGoals() {
     <div class="skill-badge">
       <span class="dot"></span>
       <span>${escapeHtml(g.title)}</span>
+      <button type="button" class="delete-btn" data-delete-goal="${g.id}">削除</button>
     </div>
   `
     )
     .join("");
+  bindGoalDeleteButtons(el);
 }
 
 // ---------- アプリ内フォーム操作 ----------

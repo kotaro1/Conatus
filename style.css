@@ -446,3 +446,11 @@ input[type="password"] {
 }
 .cat-row-info { font-size: 14px; min-width: 0; }
 .cat-row-count { font-size: 12px; color: var(--text-dim); margin-left: 6px; }
+
+input[type="password"] {
+  font: inherit; color: var(--text); background: var(--bg);
+  border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; min-width: 0;
+}
+.goal-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.skill-badge .delete-btn { padding: 1px 8px; margin-left: 4px; }
+@media (max-width: 480px) { .goal-actions { align-self: flex-end; } }
