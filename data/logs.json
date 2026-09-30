@@ -1,0 +1,23 @@
+[
+  {
+    "id": "2026-09-30-requirements",
+    "date": "2026-09-30",
+    "title": "Conatusの要件定義書を作った",
+    "content": "成長記録アプリ「Conatus」の要件定義をまとめた。データはDBを使わず、リポジトリ内のJSONファイルとして持つ方針にした。理由はサーバー不要で公開でき、変更履歴がGitのコミット履歴としてそのまま残るから。",
+    "tags": ["git", "github", "設計"]
+  },
+  {
+    "id": "2026-09-29-readme",
+    "date": "2026-09-29",
+    "title": "git-practiceにREADMEを追加した",
+    "content": "他の初学者にも読めるように、Git/GitHubの基本操作をまとめたREADME.mdを作成してpushした。READMEはGitHub上でリポジトリのトップページに自動表示されることを学んだ。",
+    "tags": ["git", "github", "readme"]
+  },
+  {
+    "id": "2026-09-25-basics",
+    "date": "2026-09-25",
+    "title": "Git/GitHubの基本操作を一通り学んだ",
+    "content": "git init/add/commit/status/diff/logの基本操作、ブランチの作成とマージ、コンフリクトの発生と解決方法、GitHubとの連携(remote, push, pull, clone)、プルリクエストの作り方までを実際に手を動かして学んだ。",
+    "tags": ["git", "github", "branch", "merge"]
+  }
+]

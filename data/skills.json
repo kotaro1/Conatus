@@ -1,0 +1,23 @@
+[
+  {
+    "id": "git-basics",
+    "title": "Gitの基本操作を習得",
+    "date": "2026-09-25",
+    "category": "Git",
+    "description": "init / add / commit / branch / merge / コンフリクト解決までの一連の流れを実践できるようになった。"
+  },
+  {
+    "id": "github-collab",
+    "title": "GitHubでの共同作業の作法を習得",
+    "date": "2026-09-25",
+    "category": "GitHub",
+    "description": "remote, push, pull, clone, プルリクエストの一連の流れを実践できるようになった。"
+  },
+  {
+    "id": "readme-writing",
+    "title": "他の人に向けたREADMEを書けるようになった",
+    "date": "2026-09-29",
+    "category": "ドキュメント",
+    "description": "初学者向けに、自分のリポジトリの使い方や学んだ内容を説明するREADME.mdを作成した。"
+  }
+]
